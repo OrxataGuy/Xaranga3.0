@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(npm install:*)",
+      "Bash(mkdir -p /c/Users/Usuario/Projects/xaranga/app/api/songs/[id]/vote)",
+      "Bash(mkdir -p /c/Users/Usuario/Projects/xaranga/app/api/songs/[id])",
+      "Bash(mkdir -p /c/Users/Usuario/Projects/xaranga/app/api/admin/songs/[id])",
+      "Bash(mkdir -p /c/Users/Usuario/Projects/xaranga/app/api/admin/play/[id])",
+      "Bash(npm run:*)",
+      "Read(//c/Users/Usuario/.claude/projects/C--Users-Usuario-Projects-xaranga/**)",
+      "Read(//c/Users/Usuario/.claude/projects/C--Users-Usuario-Projects-xaranga/memory/**)"
+    ]
+  }
+}

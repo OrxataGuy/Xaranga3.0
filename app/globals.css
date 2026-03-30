@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0f0f0f;
+  --surface: #1c1c1c;
+  --surface2: #2a2a2a;
+  --accent: #f97316;
+  --accent2: #ea580c;
+  --text: #f5f5f5;
+  --muted: #888;
+  --danger: #ef4444;
+  --success: #22c55e;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+}
+
+input, button {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Animación de pulso para votar */
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.pop {
+  animation: pop 0.2s ease-out;
+}
+
+/* Scrollbar oscura */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
