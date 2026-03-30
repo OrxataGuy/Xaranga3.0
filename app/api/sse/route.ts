@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const encoder = new TextEncoder();
+  let interval: ReturnType<typeof setInterval> | null = null;
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -12,18 +13,19 @@ export async function GET() {
         try {
           await connectDB();
           const songs = await Song.find().sort({ votes: -1, addedAt: 1 }).lean();
-          const data = `data: ${JSON.stringify(songs)}\n\n`;
-          controller.enqueue(encoder.encode(data));
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(songs)}\n\n`));
         } catch {
+          if (interval) clearInterval(interval);
           controller.close();
         }
       };
 
       await send();
-      const interval = setInterval(send, 3000);
-
-      // Limpiar al cerrar
-      return () => clearInterval(interval);
+      interval = setInterval(send, 3000);
+    },
+    cancel() {
+      // S'executa quan el client es desconnecta
+      if (interval) clearInterval(interval);
     },
   });
 

@@ -1,15 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0f0f0f;
-  --surface: #1c1c1c;
-  --surface2: #2a2a2a;
-  --accent: #f97316;
-  --accent2: #ea580c;
-  --text: #f5f5f5;
-  --muted: #888;
+  --bg: #020c1e;
+  --surface: #041530;
+  --surface2: #0a2040;
+  --surface3: #0f2a52;
+  --accent: #004aad;
+  --accent-bright: #1565d8;
+  --gold: #f0b429;
+  --gold-dim: rgba(240,180,41,0.15);
+  --text: #ffffff;
+  --text-soft: #ccd9f0;
+  --muted: #6a8ab0;
+  --secondary: #d4d4d4;
   --danger: #ef4444;
+  --danger-bg: #1a0505;
   --success: #22c55e;
+  --border: rgba(255,255,255,0.07);
 }
 
 * {
@@ -34,18 +41,21 @@ button {
   user-select: none;
 }
 
-/* Animación de pulso para votar */
 @keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.25); }
   100% { transform: scale(1); }
 }
 
-.pop {
-  animation: pop 0.2s ease-out;
+.pop { animation: pop 0.25s ease-out; }
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Scrollbar oscura */
+.fadeSlideUp { animation: fadeSlideUp 0.25s ease-out; }
+
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: #1a3a6a; border-radius: 2px; }

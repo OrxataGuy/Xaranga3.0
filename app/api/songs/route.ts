@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   const addedCount = session.addedCount ?? 0;
   if (addedCount >= 3) {
     return NextResponse.json(
-      { error: 'Has alcanzado el límite de 3 canciones por sesión (10 min)' },
+      { error: 'Has assolit el límit de 3 cançons per sessió (10 min). Torna-ho a intentar més tard.' },
       { status: 429 }
     );
   }
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   const { title, artist } = body;
 
   if (!title?.trim()) {
-    return NextResponse.json({ error: 'El título es obligatorio' }, { status: 400 });
+    return NextResponse.json({ error: 'El títol és obligatori' }, { status: 400 });
   }
 
   const song = await Song.create({

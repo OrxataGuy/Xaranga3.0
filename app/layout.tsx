@@ -2,9 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Xaranga - Peticiones',
-  description: 'Pide tu canción a la charanga',
-  manifest: '/manifest.json',
+  title: "Xaranga L'Espurna — Peticions",
+  description: "Demana la teua cançó a la Xaranga L'Espurna",
 };
 
 export const viewport: Viewport = {
@@ -12,12 +11,12 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#0f0f0f',
+  themeColor: '#004aad',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="ca-ES">
       <body>{children}</body>
     </html>
   );

@@ -1,5 +1,16 @@
-// Ejecutar con: npx ts-node --esm scripts/seed.ts
-// O: npx tsx scripts/seed.ts
+// Ejecutar con: npm run seed
+
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+// Cargar .env.local manualmente
+try {
+  const envFile = readFileSync(resolve(process.cwd(), '.env.local'), 'utf8');
+  for (const line of envFile.split('\n')) {
+    const [key, ...rest] = line.split('=');
+    if (key && rest.length) process.env[key.trim()] = rest.join('=').trim();
+  }
+} catch { /* sin .env.local */ }
 
 import mongoose from 'mongoose';
 
