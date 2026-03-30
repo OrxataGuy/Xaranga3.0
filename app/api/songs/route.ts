@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { title, artist } = body;
+  const { title } = body;
 
   if (!title?.trim()) {
     return NextResponse.json({ error: 'El títol és obligatori' }, { status: 400 });
@@ -34,7 +34,6 @@ export async function POST(request: NextRequest) {
 
   const song = await Song.create({
     title: title.trim(),
-    artist: artist?.trim() || undefined,
     votes: 0,
     isRequested: true,
   });

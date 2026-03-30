@@ -6,7 +6,6 @@ import Image from 'next/image';
 interface Song {
   _id: string;
   title: string;
-  artist?: string;
   votes: number;
   isRequested: boolean;
 }
@@ -216,14 +215,9 @@ export default function AdminPage() {
             }}>
               {playing === topSong._id ? '✅  Tocada! Reiniciant vots...' : '👆  Prem quan la toques'}
             </div>
-            <div style={{ fontSize: 24, fontWeight: 900, lineHeight: 1.2, marginBottom: 6 }}>
+            <div style={{ fontSize: 24, fontWeight: 900, lineHeight: 1.2, marginBottom: 12 }}>
               {topSong.title}
             </div>
-            {topSong.artist && (
-              <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)', marginBottom: 12 }}>
-                {topSong.artist}
-              </div>
-            )}
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
               background: 'var(--gold-dim)',
@@ -265,7 +259,6 @@ export default function AdminPage() {
                   <div style={{ fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {song.title}
                   </div>
-                  {song.artist && <div style={{ fontSize: 11, color: 'var(--muted)' }}>{song.artist}</div>}
                 </div>
                 <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent-bright)', marginRight: 4 }}>
                   👍{song.votes}
@@ -316,9 +309,6 @@ export default function AdminPage() {
               }}>
                 {song.title}
               </div>
-              {song.artist && (
-                <div style={{ fontSize: 11, color: 'var(--muted)' }}>{song.artist}</div>
-              )}
             </div>
             <span style={{
               fontSize: 13, fontWeight: 700,

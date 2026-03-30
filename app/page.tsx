@@ -6,7 +6,6 @@ import Image from 'next/image';
 interface Song {
   _id: string;
   title: string;
-  artist?: string;
   votes: number;
   isRequested: boolean;
 }
@@ -16,7 +15,6 @@ export default function ClientPage() {
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [newTitle, setNewTitle] = useState('');
-  const [newArtist, setNewArtist] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [votedIds, setVotedIds] = useState<Set<string>>(new Set());
@@ -62,13 +60,9 @@ export default function ClientPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [songs]);
 
-  const filtered = songs.filter((s) => {
-    const q = search.toLowerCase();
-    return (
-      s.title.toLowerCase().includes(q) ||
-      (s.artist?.toLowerCase().includes(q) ?? false)
-    );
-  });
+  const filtered = songs.filter((s) =>
+    s.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   const vote = useCallback(async (id: string) => {
     if (votedIds.has(id)) return;
@@ -86,7 +80,7 @@ export default function ClientPage() {
     const res = await fetch('/api/songs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newTitle.trim(), artist: newArtist.trim() }),
+      body: JSON.stringify({ title: newTitle.trim() }),
     });
 
     setLoading(false);
@@ -99,7 +93,6 @@ export default function ClientPage() {
 
     setAddedCount((c) => c + 1);
     setNewTitle('');
-    setNewArtist('');
     setShowForm(false);
   };
 
@@ -286,14 +279,6 @@ export default function ClientPage() {
                 onKeyDown={(e) => e.key === 'Enter' && addSong()}
                 style={inputStyle}
               />
-              <input
-                type="text"
-                placeholder="Artista (opcional)"
-                value={newArtist}
-                onChange={(e) => setNewArtist(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && addSong()}
-                style={{ ...inputStyle, marginTop: 10 }}
-              />
 
               <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
                 <button
@@ -426,7 +411,7 @@ function SongCard({
         {isTop ? '🏆' : `#${rank}`}
       </div>
 
-      {/* Títol i artista */}
+      {/* Títol */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
           fontSize: 15,
@@ -438,15 +423,6 @@ function SongCard({
         }}>
           {song.title}
         </div>
-        {song.artist && (
-          <div style={{
-            fontSize: 12,
-            color: isTop ? 'rgba(255,255,255,0.55)' : 'var(--muted)',
-            marginTop: 2,
-          }}>
-            {song.artist}
-          </div>
-        )}
       </div>
 
       {/* Botó votar + comptador */}
