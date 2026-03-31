@@ -21,6 +21,8 @@ export default function ClientPage() {
   const [popId, setPopId] = useState<string | null>(null);
   const [addedCount, setAddedCount] = useState(0);
   const [logoError, setLogoError] = useState(false);
+  const [showIgPopup, setShowIgPopup] = useState(false);
+  const [hasVotedSession, setHasVotedSession] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
   // Recuperar vots del localStorage en muntar
@@ -64,11 +66,42 @@ export default function ClientPage() {
     s.title.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Mostrar popup d'Instagram 4 segons després del primer vot de la sessió
+  useEffect(() => {
+    if (!hasVotedSession) return;
+
+    try {
+      const dismissed = localStorage.getItem('espurna_ig_dismissed');
+      if (dismissed) {
+        const ago30 = new Date();
+        ago30.setDate(ago30.getDate() - 30);
+        if (new Date(dismissed) > ago30) return; // Tancat fa menys de 30 dies
+      }
+    } catch { /* ignorar */ }
+
+    const t = setTimeout(() => setShowIgPopup(true), 4000);
+    return () => clearTimeout(t);
+  }, [hasVotedSession]);
+
+  const dismissIgPopup = () => {
+    try {
+      localStorage.setItem('espurna_ig_dismissed', new Date().toISOString());
+    } catch { /* ignorar */ }
+    setShowIgPopup(false);
+  };
+
+  const openInstagram = () => {
+    window.open('https://instagram.com/xaranga_lespurna', '_blank');
+    setShowIgPopup(false);
+    // NO guardem res: si han fet clic però no han seguit, el popup tornarà a eixir
+  };
+
   const vote = useCallback(async (id: string) => {
     if (votedIds.has(id)) return;
     setVotedIds((prev) => new Set([...prev, id]));
     setPopId(id);
     setTimeout(() => setPopId(null), 300);
+    setHasVotedSession(true);
     await fetch(`/api/songs/${id}/vote`, { method: 'POST' });
   }, [votedIds]);
 
@@ -333,6 +366,93 @@ export default function ClientPage() {
           />
         ))}
       </div>
+
+      {/* ── POPUP INSTAGRAM ── */}
+      {showIgPopup && (
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 60,
+            display: 'flex', alignItems: 'flex-end',
+            pointerEvents: 'none',
+          }}
+        >
+          <div
+            className="fadeSlideUp"
+            style={{
+              pointerEvents: 'auto',
+              width: '100%',
+              maxWidth: 520,
+              margin: '0 auto',
+              padding: '0 12px 24px',
+            }}
+          >
+            <div style={{
+              background: 'var(--surface)',
+              borderRadius: 20,
+              padding: '20px',
+              border: '1px solid var(--surface3)',
+              boxShadow: '0 -4px 32px rgba(0,0,0,0.6)',
+              position: 'relative',
+            }}>
+              {/* Botó tancar (X) — l'únic que guarda el "no vull" */}
+              <button
+                onClick={dismissIgPopup}
+                aria-label="Tancar"
+                style={{
+                  position: 'absolute', top: 12, right: 12,
+                  width: 28, height: 28, borderRadius: '50%',
+                  background: 'var(--surface2)',
+                  border: 'none',
+                  color: 'var(--muted)',
+                  fontSize: 14,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+              >✕</button>
+
+              {/* Contingut */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
+                {/* Icona Instagram */}
+                <div style={{
+                  width: 52, height: 52, borderRadius: 14, flexShrink: 0,
+                  background: 'linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 26,
+                }}>
+                  📸
+                </div>
+                <div>
+                  <p style={{ margin: 0, fontWeight: 800, fontSize: 15, lineHeight: 1.2 }}>
+                    T&apos;ha agradat la música?
+                  </p>
+                  <p style={{ margin: '4px 0 0', color: 'var(--muted)', fontSize: 13, lineHeight: 1.3 }}>
+                    Segueix-nos a Instagram i estaràs al dia de tots els nostres bolos!
+                  </p>
+                </div>
+              </div>
+
+              {/* Botó seguir */}
+              <button
+                onClick={openInstagram}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  background: 'linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 14,
+                  fontSize: 15,
+                  fontWeight: 800,
+                  letterSpacing: 0.3,
+                  cursor: 'pointer',
+                }}
+              >
+                Seguir @xaranga_lespurna
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
